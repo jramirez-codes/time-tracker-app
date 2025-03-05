@@ -11,7 +11,7 @@ export async function initalizeDatabase(db: SQLiteDatabase) {
   if (dbRes.user_version === 0) {
     await db.execAsync(`
       PRAGMA journal_mode = 'wal';
-      CREATE TABLE activity (
+      CREATE TABLE activities (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
         description TEXT NOT NULL,

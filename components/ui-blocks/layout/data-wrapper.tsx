@@ -1,5 +1,6 @@
 import { useSQLiteContext } from "expo-sqlite";
 import React, { ReactNode } from "react";
+import { Alert, Text } from "react-native";
 import { Activity } from "~/types/activity";
 
 interface GlobalDataContextProps {
@@ -17,34 +18,10 @@ export const useGlobalDataContext = () => {
   return globalDataContext
 }
 
-const testActives: Activity[] = [
-  {
-    title: "One",
-    description: "",
-    id: "1",
-    averageTimeMS: 0,
-    totalEvents: 0,
-  },
-  {
-    title: "Two",
-    description: "",
-    id: "2",
-    averageTimeMS: 0,
-    totalEvents: 0,
-  },
-  {
-    title: "Three",
-    description: "",
-    id: "3",
-    averageTimeMS: 0,
-    totalEvents: 0,
-  }
-]
-
 export function DataWrapper(props: { children: ReactNode }) {
   const db = useSQLiteContext()
-  const [activities, setActivities] = React.useState<Activity[]>(testActives)
-  
+  const [activities, setActivities] = React.useState<Activity[]>([])
+
   React.useEffect(() => {
     const setUp = async () => {
       const activities = await db.getAllAsync<Activity>('select * from activities')
