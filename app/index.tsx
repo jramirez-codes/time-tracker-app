@@ -4,7 +4,6 @@ import {
   Card,
 } from '~/components/ui/card';
 import { Text } from '~/components/ui/text';
-import { Play } from '~/lib/icons/PlayIcon';
 import { ScrollView } from 'react-native';
 import {
   Table,
@@ -20,6 +19,7 @@ import { Activity } from '~/types/activity';
 import { useNavigation } from 'expo-router';
 import { CreateActivityButton } from '~/components/ui-blocks/index/create-activity-button';
 import { randomUUID } from 'expo-crypto';
+import { formatMs } from '~/util/format-ms';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -27,7 +27,7 @@ export default function Page() {
   const [open, setOpen] = React.useState(false)
   const navigation = useNavigation()
 
-  function handleCreateActivity(title:string, description:string) {
+  function handleCreateActivity(title: string, description: string) {
     globalDataContext.setActivities(e => [...e, {
       title: title,
       description: description,
@@ -39,7 +39,7 @@ export default function Page() {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Chronos',
-      headerRight: () => <CreateActivityButton open={open} setOpen={setOpen} handleCreateActivity={handleCreateActivity}/>,
+      headerRight: () => <CreateActivityButton open={open} setOpen={setOpen} handleCreateActivity={handleCreateActivity} />,
     })
   }, [navigator, open])
 
@@ -71,7 +71,7 @@ export default function Page() {
                   <TableCell className="w-[50vw] relative">
                     <Card className="absolute top-1/2 right-2 p-2 -translate-y-1">
                       <Text>
-                        00:00:00
+                        {formatMs(obj.averageTimeMS)}
                       </Text>
                     </Card>
                   </TableCell>
