@@ -11,12 +11,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '~/components/ui/dialog';
-import { Text } from 'react-native';
+import { View } from 'react-native';
+import { Input } from '~/components/ui/input';
+import { Text } from '~/components/ui/text';
+import { Textarea } from '~/components/ui/textarea';
 
 export function CreateActivityButton(props: {
   open: boolean,
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }) {
+
+  const [title, setTitle] = React.useState("")
+  const [description, setDescription] = React.useState("")
+
   return (
     <Dialog
       open={props.open}
@@ -34,15 +41,32 @@ export function CreateActivityButton(props: {
       </DialogTrigger>
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle>Create an Activity</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Add a new activity to the list.
           </DialogDescription>
         </DialogHeader>
+        <View className="max-w-[75vw]">
+          <Input
+            placeholder='Title'
+            value={title}
+            onChangeText={(e) => { setTitle(e) }}
+            aria-labelledby='inputLabel'
+            aria-errormessage='inputError'
+            className="mb-2"
+          />
+          <Textarea
+            placeholder={`Write some stuff about ${title}...`}
+            value={description}
+            onChangeText={(e)=>setDescription(e)}
+            aria-labelledby='textareaLabel'
+            className="mb-2"
+          />
+        </View>
         <DialogFooter>
           <DialogClose asChild>
             <Button>
-              <Text>OK</Text>
+              <Text>Create</Text>
             </Button>
           </DialogClose>
         </DialogFooter>

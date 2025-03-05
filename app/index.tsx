@@ -1,15 +1,7 @@
 import * as React from 'react';
-import { Alert, Pressable, View } from 'react-native';
-import { Info } from '~/lib/icons/Info';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
-import { Button } from '~/components/ui/button';
+import { View } from 'react-native';
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from '~/components/ui/card';
 import { Text } from '~/components/ui/text';
 import { Play } from '~/lib/icons/PlayIcon';
