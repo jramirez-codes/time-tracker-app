@@ -38,7 +38,7 @@ export default function Page() {
   }
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'Chronos',
+      title: 'Astronos',
       headerRight: () => <CreateActivityButton open={open} setOpen={setOpen} handleCreateActivity={handleCreateActivity} />,
     })
   }, [navigator, open])
