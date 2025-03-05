@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import {
   Card,
 } from '~/components/ui/card';
@@ -19,6 +19,7 @@ import { useGlobalDataContext } from '~/components/ui-blocks/layout/data-wrapper
 import { Activity } from '~/types/activity';
 import { useNavigation } from 'expo-router';
 import { CreateActivityButton } from '~/components/ui-blocks/index/create-activity-button';
+import { randomUUID } from 'expo-crypto';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -26,13 +27,21 @@ export default function Page() {
   const [open, setOpen] = React.useState(false)
   const navigation = useNavigation()
 
+  function handleCreateActivity(title:string, description:string) {
+    globalDataContext.setActivities(e => [...e, {
+      title: title,
+      description: description,
+      averageTimeMS: 0,
+      totalEvents: 0,
+      id: randomUUID(),
+    }])
+  }
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Chronos',
-      headerRight: () => <CreateActivityButton open={open} setOpen={setOpen} />,
+      headerRight: () => <CreateActivityButton open={open} setOpen={setOpen} handleCreateActivity={handleCreateActivity}/>,
     })
   }, [navigator, open])
-
 
   return (
     <View className='bg-background'>
@@ -43,7 +52,7 @@ export default function Page() {
               <Text className="text-left pl-1">Title</Text>
             </TableHead>
             <TableHead className='w-[50vw]' >
-              <Text className="text-right pr-1">Average Time</Text>
+              <Text className="text-right pr-1">Average Time (HH:MM:SS)</Text>
             </TableHead>
           </TableRow>
         </TableHeader>

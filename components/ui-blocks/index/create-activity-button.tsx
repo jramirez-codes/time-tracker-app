@@ -18,9 +18,9 @@ import { Textarea } from '~/components/ui/textarea';
 
 export function CreateActivityButton(props: {
   open: boolean,
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  handleCreateActivity: Function
 }) {
-
   const [title, setTitle] = React.useState("")
   const [description, setDescription] = React.useState("")
 
@@ -46,7 +46,7 @@ export function CreateActivityButton(props: {
             Add a new activity to the list.
           </DialogDescription>
         </DialogHeader>
-        <View className="max-w-[75vw]">
+        <View className="w-[75vw]">
           <Input
             placeholder='Title'
             value={title}
@@ -56,16 +56,20 @@ export function CreateActivityButton(props: {
             className="mb-2"
           />
           <Textarea
-            placeholder={`Write some stuff about ${title}...`}
+            placeholder={`Description about ${title}...`}
             value={description}
-            onChangeText={(e)=>setDescription(e)}
+            onChangeText={(e) => setDescription(e)}
             aria-labelledby='textareaLabel'
             className="mb-2"
           />
         </View>
         <DialogFooter>
           <DialogClose asChild>
-            <Button>
+            <Button onPress={() => {
+              props.handleCreateActivity(title, description)
+              setTitle("")
+              setDescription("")
+            }}>
               <Text>Create</Text>
             </Button>
           </DialogClose>
