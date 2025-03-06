@@ -1,11 +1,10 @@
-import { useSQLiteContext } from "expo-sqlite";
+import { SQLiteDatabase, useSQLiteContext } from "expo-sqlite";
 import React, { ReactNode } from "react";
-import { Alert, Text } from "react-native";
 import { Activity } from "~/types/activity";
 
 interface GlobalDataContextProps {
   activities: Activity[],
-  setActivities: React.Dispatch<React.SetStateAction<Activity[]>>
+  setActivities: React.Dispatch<React.SetStateAction<Activity[]>>,
 }
 
 export const GlobalDataContext = React.createContext<GlobalDataContextProps | undefined>(undefined)
@@ -34,7 +33,7 @@ export function DataWrapper(props: { children: ReactNode }) {
     <>
       <GlobalDataContext.Provider value={{
         activities: activities,
-        setActivities: setActivities
+        setActivities: setActivities,
       }}>
         {props.children}
       </GlobalDataContext.Provider>

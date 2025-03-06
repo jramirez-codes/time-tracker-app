@@ -11,7 +11,7 @@ import { PortalHost } from '@rn-primitives/portal';
 import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
 import { DataWrapper } from '~/components/ui-blocks/layout/data-wrapper';
 import { SQLiteProvider } from 'expo-sqlite';
-import { initalizeDatabase } from '~/util/initalize-database';
+import { initalizeDatabase } from '~/util/db/initalize-database';
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -59,7 +59,7 @@ export default function RootLayout() {
             <Stack.Screen
               name='index'
               options={{
-                title: 'Chronos',
+                title: 'Astronos',
               }}
             />
           </Stack>

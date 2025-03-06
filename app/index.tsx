@@ -20,21 +20,26 @@ import { useNavigation } from 'expo-router';
 import { CreateActivityButton } from '~/components/ui-blocks/index/create-activity-button';
 import { randomUUID } from 'expo-crypto';
 import { formatMs } from '~/util/format-ms';
+import { createActivityRecord } from '~/util/db/create-activity-record';
+import { useSQLiteContext } from 'expo-sqlite';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
   const activities: Activity[] = globalDataContext.activities
   const [open, setOpen] = React.useState(false)
   const navigation = useNavigation()
+  const db = useSQLiteContext()
 
   function handleCreateActivity(title: string, description: string) {
-    globalDataContext.setActivities(e => [...e, {
+    const newActivity = {
       title: title,
       description: description,
       averageTimeMS: 0,
       totalEvents: 0,
       id: randomUUID(),
-    }])
+    }
+    globalDataContext.setActivities(e => [...e, newActivity])
+    createActivityRecord(newActivity, db)
   }
   React.useLayoutEffect(() => {
     navigation.setOptions({
