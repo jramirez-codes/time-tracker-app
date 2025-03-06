@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import {
   Card,
 } from '~/components/ui/card';
@@ -26,12 +26,14 @@ import { Vibration } from 'react-native';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { Button } from '~/components/ui/button';
 import { deleteActivityRecord } from '~/util/db/delete-activity-record';
+import { handleDoubleTapEvent, useDoubleTapPropsRef } from '~/util/double-tap-event';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
   const activities: Activity[] = globalDataContext.activities
   const selectedActivity = globalDataContext.selectedActivity
   const [isCreatingNewActivity, setIsisCreatingNewActivity] = React.useState(false)
+  const doubleTapRef = useDoubleTapPropsRef()
   const [isDeletingActivity, setIsDeletingActivity] = React.useState(false)
   const navigation = useNavigation()
   const router = useRouter()
@@ -50,12 +52,23 @@ export default function Page() {
   }
 
   function handleDeleteActivity() {
-    if(globalDataContext.selectedActivity?.id) {
+    if (globalDataContext.selectedActivity?.id) {
       const idToDelete = globalDataContext.selectedActivity.id
-      globalDataContext.setActivities(e=>e.filter(s=>s.id !== idToDelete))
+      globalDataContext.setActivities(e => e.filter(s => s.id !== idToDelete))
       globalDataContext.setSelectedActivity(null)
       deleteActivityRecord(idToDelete, db)
     }
+  }
+
+  function handleDoubleAndSinglePress(activity: Activity) {
+    handleDoubleTapEvent(doubleTapRef,
+      () => {
+        globalDataContext.setSelectedActivity(activity)
+        router.navigate(`/info/${activity.id}}`)
+      },
+      () => {
+        Alert.alert("DOUBLE TAP")
+      })
   }
 
   React.useLayoutEffect(() => {
@@ -84,10 +97,7 @@ export default function Page() {
             {activities.map((obj, index) => {
               return (
                 <TableRow
-                  onPress={() => {
-                    globalDataContext.setSelectedActivity(obj)
-                    router.navigate(`/info/${obj.id}}`)
-                  }}
+                  onPress={() => { handleDoubleAndSinglePress(obj) }}
                   className={cn('active:bg-secondary', index % 2 && 'bg-muted/40 ')}
                   onLongPress={() => {
                     Vibration.vibrate(50);
@@ -124,8 +134,8 @@ export default function Page() {
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button 
-                onPressIn={()=>{handleDeleteActivity()}}
+              <Button
+                onPressIn={() => { handleDeleteActivity() }}
               >
                 <Text>OK</Text>
               </Button>
