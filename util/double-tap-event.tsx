@@ -1,7 +1,7 @@
 import React from "react";
 import { DobuleTapEventProps } from "~/types/double-tap-event";
 
-export function useDoubleTapPropsRef(delayTime?: number) {
+export function useDoubleTapRef(delayTime?: number) {
   const doubleTapRef = React.useRef<DobuleTapEventProps>({
     delayTime: delayTime ? delayTime : 150,
     firstPress: true,

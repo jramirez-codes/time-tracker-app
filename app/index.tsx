@@ -26,14 +26,14 @@ import { Vibration } from 'react-native';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { Button } from '~/components/ui/button';
 import { deleteActivityRecord } from '~/util/db/delete-activity-record';
-import { handleDoubleTapEvent, useDoubleTapPropsRef } from '~/util/double-tap-event';
+import { handleDoubleTapEvent, useDoubleTapRef } from '~/util/double-tap-event';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
   const activities: Activity[] = globalDataContext.activities
   const selectedActivity = globalDataContext.selectedActivity
   const [isCreatingNewActivity, setIsisCreatingNewActivity] = React.useState(false)
-  const doubleTapRef = useDoubleTapPropsRef()
+  const doubleTapRef = useDoubleTapRef()
   const [isDeletingActivity, setIsDeletingActivity] = React.useState(false)
   const navigation = useNavigation()
   const router = useRouter()
