@@ -17,7 +17,7 @@ export default function Page() {
 
   return (
     <View className='bg-background'>
-      <Text className="pl-2 pr-2">{selectedActivity?.description}</Text>
+      <Text className="pl-2 pr-2">START NEW TIMER</Text>
     </View>
   );
 }

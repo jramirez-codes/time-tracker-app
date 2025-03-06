@@ -35,6 +35,7 @@ export default function Page() {
   const [isCreatingNewActivity, setIsisCreatingNewActivity] = React.useState(false)
   const doubleTapRef = useDoubleTapRef()
   const [isDeletingActivity, setIsDeletingActivity] = React.useState(false)
+  const [isStartingActivity, setIsStartingActivity] = React.useState(false)
   const navigation = useNavigation()
   const router = useRouter()
   const db = useSQLiteContext()
@@ -61,13 +62,13 @@ export default function Page() {
   }
 
   function handleDoubleAndSinglePress(activity: Activity) {
+    globalDataContext.setSelectedActivity(activity)
     handleDoubleTapEvent(doubleTapRef,
       () => {
-        globalDataContext.setSelectedActivity(activity)
         router.navigate(`/info/${activity.id}}`)
       },
       () => {
-        Alert.alert("DOUBLE TAP")
+        setIsStartingActivity(true)
       })
   }
 
@@ -136,8 +137,29 @@ export default function Page() {
             <DialogClose asChild>
               <Button
                 onPressIn={() => { handleDeleteActivity() }}
+                variant={"destructive"}
               >
-                <Text>OK</Text>
+                <Text>Delete</Text>
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* Start Activity */}
+      <Dialog open={isStartingActivity} onOpenChange={e => setIsStartingActivity(e)}>
+        <DialogContent className='w-[75vw]'>
+          <DialogHeader>
+            <DialogTitle>Start Activity</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to start {selectedActivity?.title}?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button
+                onPressIn={() => { router.push(`/timer/${(new Date).getTime()}`)}}
+              >
+                <Text>Start</Text>
               </Button>
             </DialogClose>
           </DialogFooter>
