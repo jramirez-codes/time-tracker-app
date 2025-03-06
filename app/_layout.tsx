@@ -62,6 +62,12 @@ export default function RootLayout() {
                 title: 'Astronos',
               }}
             />
+            <Stack.Screen
+              name='info/[id]'
+              options={{
+                title: 'Test',
+              }}
+            />
           </Stack>
           <PortalHost />
         </DataWrapper>

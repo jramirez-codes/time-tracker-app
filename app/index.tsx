@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 import {
   Card,
 } from '~/components/ui/card';
@@ -16,7 +16,7 @@ import {
 import { cn } from '~/lib/utils';
 import { useGlobalDataContext } from '~/components/ui-blocks/layout/data-wrapper';
 import { Activity } from '~/types/activity';
-import { useNavigation } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { CreateActivityButton } from '~/components/ui-blocks/index/create-activity-button';
 import { randomUUID } from 'expo-crypto';
 import { formatMs } from '~/util/format-ms';
@@ -34,6 +34,7 @@ export default function Page() {
   const [isCreatingNewActivity, setIsisCreatingNewActivity] = React.useState(false)
   const [isDeletingActivity, setIsDeletingActivity] = React.useState(false)
   const navigation = useNavigation()
+  const router = useRouter()
   const db = useSQLiteContext()
 
   function handleCreateActivity(title: string, description: string) {
@@ -83,7 +84,10 @@ export default function Page() {
             {activities.map((obj, index) => {
               return (
                 <TableRow
-                  onPress={() => { }}
+                  onPress={() => {
+                    globalDataContext.setSelectedActivity(obj)
+                    router.push(`/info/${obj.id}}`)
+                  }}
                   className={cn('active:bg-secondary', index % 2 && 'bg-muted/40 ')}
                   onLongPress={() => {
                     Vibration.vibrate(50);
