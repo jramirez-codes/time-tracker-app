@@ -86,7 +86,7 @@ export default function Page() {
                 <TableRow
                   onPress={() => {
                     globalDataContext.setSelectedActivity(obj)
-                    router.push(`/info/${obj.id}}`)
+                    router.navigate(`/info/${obj.id}}`)
                   }}
                   className={cn('active:bg-secondary', index % 2 && 'bg-muted/40 ')}
                   onLongPress={() => {
