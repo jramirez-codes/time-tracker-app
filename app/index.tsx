@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, View } from 'react-native';
+import { Alert, TouchableOpacity, View } from 'react-native';
 import {
   Card,
 } from '~/components/ui/card';
@@ -22,11 +22,17 @@ import { randomUUID } from 'expo-crypto';
 import { formatMs } from '~/util/format-ms';
 import { createActivityRecord } from '~/util/db/create-activity-record';
 import { useSQLiteContext } from 'expo-sqlite';
+import { Vibration } from 'react-native';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog';
+import { Button } from '~/components/ui/button';
+import { deleteActivityRecord } from '~/util/db/delete-activity-record';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
   const activities: Activity[] = globalDataContext.activities
-  const [open, setOpen] = React.useState(false)
+  const selectedActivity = globalDataContext.selectedActivity
+  const [isCreatingNewActivity, setIsisCreatingNewActivity] = React.useState(false)
+  const [isDeletingActivity, setIsDeletingActivity] = React.useState(false)
   const navigation = useNavigation()
   const db = useSQLiteContext()
 
@@ -41,15 +47,26 @@ export default function Page() {
     globalDataContext.setActivities(e => [...e, newActivity])
     createActivityRecord(newActivity, db)
   }
+
+  function handleDeleteActivity() {
+    if(globalDataContext.selectedActivity?.id) {
+      const idToDelete = globalDataContext.selectedActivity.id
+      globalDataContext.setActivities(e=>e.filter(s=>s.id !== idToDelete))
+      globalDataContext.setSelectedActivity(null)
+      deleteActivityRecord(idToDelete, db)
+    }
+  }
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Astronos',
-      headerRight: () => <CreateActivityButton open={open} setOpen={setOpen} handleCreateActivity={handleCreateActivity} />,
+      headerRight: () => <CreateActivityButton open={isCreatingNewActivity} setOpen={setIsisCreatingNewActivity} handleCreateActivity={handleCreateActivity} />,
     })
-  }, [navigator, open])
+  }, [navigator, isCreatingNewActivity])
 
   return (
     <View className='bg-background'>
+      {/* Main Table */}
       <Table>
         <TableHeader>
           <TableRow>
@@ -68,6 +85,12 @@ export default function Page() {
                 <TableRow
                   onPress={() => { }}
                   className={cn('active:bg-secondary', index % 2 && 'bg-muted/40 ')}
+                  onLongPress={() => {
+                    Vibration.vibrate(50);
+                    globalDataContext.setSelectedActivity(obj)
+                    setIsDeletingActivity(true);
+                  }}
+                  delayLongPress={1000}
                   key={obj.id}
                 >
                   <TableCell className="w-[50vw]">
@@ -86,6 +109,26 @@ export default function Page() {
           </TableBody>
         </ScrollView>
       </Table>
+      {/* Delete Activty Dialog */}
+      <Dialog open={isDeletingActivity} onOpenChange={e => setIsDeletingActivity(e)}>
+        <DialogContent className='w-[75vw]'>
+          <DialogHeader>
+            <DialogTitle>Delete Activity</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete {selectedActivity?.title}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button 
+                onPressIn={()=>{handleDeleteActivity()}}
+              >
+                <Text>OK</Text>
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </View>
   );
 }

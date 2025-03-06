@@ -5,6 +5,8 @@ import { Activity } from "~/types/activity";
 interface GlobalDataContextProps {
   activities: Activity[],
   setActivities: React.Dispatch<React.SetStateAction<Activity[]>>,
+  selectedActivity: Activity | null,
+  setSelectedActivity: React.Dispatch<React.SetStateAction<Activity | null>>
 }
 
 export const GlobalDataContext = React.createContext<GlobalDataContextProps | undefined>(undefined)
@@ -20,6 +22,7 @@ export const useGlobalDataContext = () => {
 export function DataWrapper(props: { children: ReactNode }) {
   const db = useSQLiteContext()
   const [activities, setActivities] = React.useState<Activity[]>([])
+  const [selectedActivity, setSelectedActivity] = React.useState<Activity | null>(null)
 
   React.useEffect(() => {
     const setUp = async () => {
@@ -34,6 +37,8 @@ export function DataWrapper(props: { children: ReactNode }) {
       <GlobalDataContext.Provider value={{
         activities: activities,
         setActivities: setActivities,
+        selectedActivity: selectedActivity,
+        setSelectedActivity: setSelectedActivity
       }}>
         {props.children}
       </GlobalDataContext.Provider>
