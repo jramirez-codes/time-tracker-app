@@ -1,5 +1,4 @@
 import { SQLiteDatabase } from "expo-sqlite";
-import { Alert } from "react-native";
 
 export async function initalizeDatabase(db: SQLiteDatabase) {
   const DATABASE_VERSION = 1;
@@ -21,7 +20,7 @@ export async function initalizeDatabase(db: SQLiteDatabase) {
       );
       CREATE TABLE events (
         id TEXT PRIMARY KEY,
-        activity_id TEXT NOT NULL,
+        activityId TEXT NOT NULL,
         startTime INTEGER NOT NULL,
         duration INTEGER NOT NULL
       );

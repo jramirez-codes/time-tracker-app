@@ -1,4 +1,4 @@
-import { SQLiteDatabase, useSQLiteContext } from "expo-sqlite";
+import { useSQLiteContext } from "expo-sqlite";
 import React, { ReactNode } from "react";
 import { Activity } from "~/types/activity";
 

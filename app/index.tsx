@@ -157,7 +157,7 @@ export default function Page() {
           <DialogFooter>
             <DialogClose asChild>
               <Button
-                onPressIn={() => { router.replace(`/timer/${(new Date).getTime()}`) }}
+                onPressIn={() => { router.replace(`/timer/${selectedActivity?.id}/${(new Date).getTime()}`) }}
               >
                 <Text>Start</Text>
               </Button>

@@ -55,20 +55,7 @@ export default function RootLayout() {
       <SQLiteProvider databaseName='main.db' onInit={initalizeDatabase}>
         <DataWrapper>
           <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-          <Stack>
-            <Stack.Screen
-              name='index'
-              options={{
-                title: 'Astronos',
-              }}
-            />
-            <Stack.Screen
-              name='info/[id]'
-              options={{
-                title: 'Test',
-              }}
-            />
-          </Stack>
+          <Stack/>
           <PortalHost />
         </DataWrapper>
       </SQLiteProvider>

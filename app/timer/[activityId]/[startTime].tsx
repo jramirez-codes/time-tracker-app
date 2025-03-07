@@ -8,14 +8,21 @@ import { Button } from '~/components/ui/button';
 import { CircleX } from '~/lib/icons/CircleX';
 import { CircleStop } from '~/lib/icons/CircleStop';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog';
+import { useSQLiteContext } from 'expo-sqlite';
+import { useLocalSearchParams } from 'expo-router';
+import { randomUUID } from 'expo-crypto';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
   const selectedActivity = globalDataContext.selectedActivity
   const navigation = useNavigation()
   const [isCancelingActivity, setIsCancelingActivity] = React.useState(false)
+  const [isConfirmingEndActivity, setIsConfirmingEndActivity] = React.useState(false)
   const router = useRouter()
-  
+  const db = useSQLiteContext()
+  const { activityId, startTime } = useLocalSearchParams();
+
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: "Running Activity...",
@@ -24,7 +31,7 @@ export default function Page() {
           <Button
             variant={'ghost'}
             className="flex-row"
-            onPressIn={() => {setIsCancelingActivity(true) }}
+            onPressIn={() => { setIsCancelingActivity(true) }}
           >
             <CircleX className='text-foreground' size={23} strokeWidth={1.25} />
           </Button>
@@ -32,6 +39,17 @@ export default function Page() {
       }
     })
   }, [navigator])
+
+  async function handleEndActivity() {
+    if (isConfirmingEndActivity) {
+      await db.execAsync(`
+        INSERT INTO events (id, activityId, startTime, duration) 
+        VALUES ('${randomUUID()}', '${activityId}', ${startTime}, ${(new Date).getTime() - Number(startTime)});
+      `)
+      router.replace(`/`)
+    }
+    setIsConfirmingEndActivity(true)
+  }
 
   return (
     <React.Fragment>
@@ -50,9 +68,18 @@ export default function Page() {
           >
             {({ remainingTime }) => <Text>{remainingTime}</Text>}
           </CountdownCircleTimer>
-          <Button variant={'outline'} className='mt-10 flex-row'>
-            <CircleStop className="text-foreground mr-3"/>
-            <Text style={{marginTop:-2}} className="font-bold">End Activity</Text>
+          <Button
+            variant={isConfirmingEndActivity ? 'default' : 'outline'}
+            className='mt-10 flex-row'
+            onPressIn={() => { handleEndActivity() }}
+          >
+            {isConfirmingEndActivity ? (
+              <CircleStop className="text-background mr-3" />
+            ) : (
+
+              <CircleStop className="text-foreground mr-3" />
+            )}
+            <Text style={{ marginTop: -2 }} className="font-bold">End Activity</Text>
           </Button>
         </View>
       </View>
