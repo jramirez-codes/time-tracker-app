@@ -23,7 +23,7 @@ export function CreateActivityButton(props: {
 }) {
   const [title, setTitle] = React.useState("")
   const [description, setDescription] = React.useState("")
-
+  
   return (
     <Dialog
       open={props.open}
