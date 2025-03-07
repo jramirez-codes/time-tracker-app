@@ -67,7 +67,7 @@ export default function Page() {
             }}
             colorsTime={[5, 4, 3, 2, 1, 0]}
           >
-            {({}) => <Text>{timerDisplayString}</Text>}
+            {({}) => <Text className="font-bold text-3xl">{timerDisplayString}</Text>}
           </CountdownCircleTimer>
           <Button
             variant={isConfirmingEndActivity ? 'default' : 'outline'}
