@@ -65,7 +65,7 @@ export default function Page() {
     globalDataContext.setSelectedActivity(activity)
     handleDoubleTapEvent(doubleTapRef,
       () => {
-        router.navigate(`/info/${activity.id}}`)
+        router.navigate(`/info/${activity.id}`)
       },
       () => {
         setIsStartingActivity(true)

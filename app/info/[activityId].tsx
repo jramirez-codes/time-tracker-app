@@ -18,7 +18,6 @@ export default function Page() {
     const setUp = async () => {
       const events = await db.getAllAsync<Events>(`SELECT * FROM events WHERE activityId = '${activityId}';`)
       setCurrentEvents(events)
-      console.log(events)
     }
     setUp()
   }, [])

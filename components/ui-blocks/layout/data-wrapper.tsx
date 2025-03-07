@@ -26,7 +26,7 @@ export function DataWrapper(props: { children: ReactNode }) {
 
   React.useEffect(() => {
     const setUp = async () => {
-      const activities = await db.getAllAsync<Activity>('select * from activities')
+      const activities = await db.getAllAsync<Activity>('SELECT * FROM activities;')
       setActivities(activities)
     }
     setUp()
