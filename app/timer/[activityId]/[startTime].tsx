@@ -11,6 +11,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { useSQLiteContext } from 'expo-sqlite';
 import { useLocalSearchParams } from 'expo-router';
 import { randomUUID } from 'expo-crypto';
+import { useGetTime } from '~/components/ui-blocks/timer/hooks/use-get-time';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -21,7 +22,7 @@ export default function Page() {
   const router = useRouter()
   const db = useSQLiteContext()
   const { activityId, startTime } = useLocalSearchParams();
-
+  const timerDisplayString = useGetTime(Number(startTime))
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -66,7 +67,7 @@ export default function Page() {
             }}
             colorsTime={[5, 4, 3, 2, 1, 0]}
           >
-            {({ remainingTime }) => <Text>{remainingTime}</Text>}
+            {({}) => <Text>{timerDisplayString}</Text>}
           </CountdownCircleTimer>
           <Button
             variant={isConfirmingEndActivity ? 'default' : 'outline'}
@@ -103,7 +104,6 @@ export default function Page() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      {/* Handle Cancel Activity */}
     </React.Fragment>
   );
 }
