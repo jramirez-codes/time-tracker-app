@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Dimensions, ScrollView, Vibration } from 'react-native';
 import { Text } from '~/components/ui/text';
 import { useGlobalDataContext } from '~/components/ui-blocks/layout/data-wrapper';
-import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { Event } from '~/types/event';
 import { useSQLiteContext } from 'expo-sqlite';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -14,6 +14,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~
 import { cn } from '~/lib/utils';
 import { Card } from '~/components/ui/card';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog';
+import { deleteEventRecord } from '~/util/db/events/delete-event-record';
+import { updateActivityRecord } from '~/util/db/activities/update-activity-record';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -24,11 +26,12 @@ export default function Page() {
   const { activityId } = useLocalSearchParams();
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  const [selectedEvent, setSelectedEvent] = React.useState<(GraphPoint & { id?: string }) | null>(null)
+  const [selectedEvent, setSelectedEvent] = React.useState<(GraphPoint) | null>(null)
   const [hasZeroEvents, setHasZeroEvents] = React.useState(false)
   const tableBodyRef = React.useRef<View | null>(null)
   const [tableBodyHeight, setTableBodyHeight] = React.useState(0)
-  const [isDeletingEvent, setIsDeletingEvent] = React.useState(false)
+  const [eventToDelete, setEventToDelete] = React.useState<Event | null>(null)
+  const router = useRouter()
 
   React.useEffect(() => {
     const setUp = async () => {
@@ -57,16 +60,28 @@ export default function Page() {
   }, [navigator])
 
   const lineGraphData = React.useMemo(() => {
-    return currentEvents.map((e) => {
+    const eventData = currentEvents.map((e) => {
       return {
         date: new Date(e.startTime),
         value: e.duration
       }
-    }).reverse()
+    })
+    if (Array.isArray(eventData)) {
+      return eventData.reverse()
+    }
+    return eventData
   }, [currentEvents])
 
-  function handleDeleteEvent() {
-    throw new Error('Function not implemented.');
+  async function handleDeleteEvent(event: Event | null) {
+    if (selectedActivity && event) {
+      await deleteEventRecord(event.id, db)
+      await updateActivityRecord({
+        ...selectedActivity,
+        averageTimeMS: Math.ceil(((selectedActivity.averageTimeMS * selectedActivity.totalEvents) + event.duration) / (selectedActivity.totalEvents + 1)),
+        totalEvents: selectedActivity.totalEvents + 1
+      }, db)
+      setCurrentEvents(e => e.filter(s => s.id !== event.id))
+    }
   }
 
   return (
@@ -143,9 +158,8 @@ export default function Page() {
                         setSelectedEvent({
                           date: new Date(obj.startTime),
                           value: obj.duration,
-                          id: obj.id
                         })
-                        setIsDeletingEvent(true);
+                        setEventToDelete(obj);
                       }}
                       delayLongPress={1000}
                       key={obj.id}
@@ -168,6 +182,7 @@ export default function Page() {
           </View>
         </Table>
       )}
+      {/* Content to Show if events is empty */}
       {hasZeroEvents && (
         <View className="p-10">
           <Text className="font-bold text-4xl text-center mb-2">
@@ -176,12 +191,17 @@ export default function Page() {
           <Text style={{ color: accentColor }} className="text-xl text-center mb-2">
             Start adding new events
           </Text>
-          <Button>
+          <Button onPressIn={() => {
+            if (selectedActivity?.id) {
+              router.replace(`/timer/${selectedActivity.id}/${(new Date()).getTime()}`)
+            }
+          }}>
             <Text>Create New Event</Text>
           </Button>
         </View>
       )}
-      <Dialog open={isDeletingEvent} onOpenChange={e => setIsDeletingEvent(e)}>
+      {/* Handle Delete Event */}
+      <Dialog open={eventToDelete ? true : false} onOpenChange={_ => setEventToDelete(null)}>
         <DialogContent className='w-[75vw]'>
           <DialogHeader>
             <DialogTitle>Delete Event</DialogTitle>
@@ -192,7 +212,7 @@ export default function Page() {
           <DialogFooter>
             <DialogClose asChild>
               <Button
-                onPressIn={() => { handleDeleteEvent() }}
+                onPressIn={() => { handleDeleteEvent(eventToDelete) }}
                 variant={"destructive"}
               >
                 <Text>Delete</Text>
