@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, ScrollView, Vibration } from 'react-native';
 import { Text } from '~/components/ui/text';
 import { useGlobalDataContext } from '~/components/ui-blocks/layout/data-wrapper';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
@@ -10,6 +10,9 @@ import { GraphPoint, LineGraph } from 'react-native-graph';
 import { formatMs } from '~/util/format-ms';
 import { accentColor } from '~/assets/static-states/accent-color';
 import { Button } from '~/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
+import { cn } from '~/lib/utils';
+import { Card } from '~/components/ui/card';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -25,7 +28,10 @@ export default function Page() {
   React.useEffect(() => {
     const setUp = async () => {
       const events = await db.getAllAsync<Event>(`SELECT * FROM events WHERE activityId = '${activityId}';`)
-      setCurrentEvents(events)
+      setCurrentEvents(events.map(e => {
+        const newDate = new Date(e.startTime)
+        return { ...e, startDateString: `${newDate.toLocaleDateString()} - ${newDate.toLocaleTimeString()}` }
+      }))
       if (events.length > 0) {
         setSelectedEvent({
           date: new Date(events[0].startTime),
@@ -74,6 +80,7 @@ export default function Page() {
             animated={true}
             color={accentColor}
             onPointSelected={(e) => { setSelectedEvent(e) }}
+            // onGestureStart={() => { Vibration.vibrate(50); }}
             enablePanGesture={true}
           />
         </GestureHandlerRootView>
@@ -91,6 +98,51 @@ export default function Page() {
           </View>
         )}
       </View>
+      {!hasZeroEvents && (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className='w-[50vw]' >
+                <Text className="text-left pl-1">Date</Text>
+              </TableHead>
+              <TableHead className='w-[50vw]' >
+                <Text className="text-right pr-1">Event Duration</Text>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+            <TableBody>
+              {currentEvents.map((obj, index) => {
+                return (
+                  <TableRow
+                    // onPress={() => { handleDoubleAndSinglePress(obj) }}
+                    className={cn('active:bg-secondary', index % 2 && 'bg-muted/40 ')}
+                    onLongPress={() => {
+                      Vibration.vibrate(50);
+                      // globalDataContext.setSelectedActivity(obj)
+                      // setIsDeletingActivity(true);
+                    }}
+                    delayLongPress={1000}
+                    key={obj.id}
+                  >
+                    <TableCell className="w-[50vw]">
+                      <Text>{obj.startDateString}</Text>
+                    </TableCell>
+                    <TableCell className="w-[50vw] relative">
+                      <Card className="absolute top-1/2 right-2 p-2 -translate-y-1">
+                        <Text style={{ color: accentColor }}>
+                          {formatMs(obj.duration)}
+                        </Text>
+                      </Card>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </ScrollView>
+        </Table>
+
+      )}
       {hasZeroEvents && (
         <View className="p-10">
           <Text className="font-bold text-4xl text-center mb-2">
