@@ -12,6 +12,7 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { useLocalSearchParams } from 'expo-router';
 import { randomUUID } from 'expo-crypto';
 import { useGetTime } from '~/components/ui-blocks/timer/hooks/use-get-time';
+import { createEventRecord } from '~/util/db/events/create-event-record';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -43,10 +44,7 @@ export default function Page() {
 
   async function handleEndActivity() {
     if (isConfirmingEndActivity) {
-      await db.execAsync(`
-        INSERT INTO events (id, activityId, startTime, duration) 
-        VALUES ('${randomUUID()}', '${activityId}', ${startTime}, ${(new Date).getTime() - Number(startTime)});
-      `)
+      await createEventRecord(`${activityId}`, Number(startTime), db)
       router.replace(`/`)
     }
     setIsConfirmingEndActivity(true)
