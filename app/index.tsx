@@ -20,12 +20,12 @@ import { useNavigation, useRouter } from 'expo-router';
 import { CreateActivityButton } from '~/components/ui-blocks/index/create-activity-button';
 import { randomUUID } from 'expo-crypto';
 import { formatMs } from '~/util/format-ms';
-import { createActivityRecord } from '~/util/db/create-activity-record';
+import { createActivityRecord } from '~/util/db/activities/create-activity-record';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Vibration } from 'react-native';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { Button } from '~/components/ui/button';
-import { deleteActivityRecord } from '~/util/db/delete-activity-record';
+import { deleteActivityRecord } from '~/util/db/activities/delete-activity-record';
 import { handleDoubleTapEvent, useDoubleTapRef } from '~/util/double-tap-event';
 import { accentColor } from '~/assets/static-states/accent-color';
 

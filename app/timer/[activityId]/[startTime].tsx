@@ -10,9 +10,9 @@ import { CircleStop } from '~/lib/icons/CircleStop';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useLocalSearchParams } from 'expo-router';
-import { randomUUID } from 'expo-crypto';
 import { useGetTime } from '~/components/ui-blocks/timer/hooks/use-get-time';
 import { createEventRecord } from '~/util/db/events/create-event-record';
+import { updateActivityRecord } from '~/util/db/activities/update-activity-record';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -44,7 +44,15 @@ export default function Page() {
 
   async function handleEndActivity() {
     if (isConfirmingEndActivity) {
-      await createEventRecord(`${activityId}`, Number(startTime), db)
+      const eventDuration = (new Date).getTime() - Number(startTime)
+      await createEventRecord(`${activityId}`, Number(startTime), eventDuration, db)
+      if (selectedActivity?.hasOwnProperty('averageTimeMS')) {
+        await updateActivityRecord({
+          ...selectedActivity,
+          averageTimeMS: Math.ceil(((selectedActivity.averageTimeMS * selectedActivity.totalEvents) + eventDuration) / (selectedActivity.totalEvents + 1)),
+          totalEvents: selectedActivity.totalEvents + 1
+        }, db)
+      }
       router.replace(`/`)
     }
     setIsConfirmingEndActivity(true)
@@ -65,7 +73,7 @@ export default function Page() {
             }}
             colorsTime={[5, 4, 3, 2, 1, 0]}
           >
-            {({}) => <Text className="font-bold text-3xl">{timerDisplayString}</Text>}
+            {({ }) => <Text className="font-bold text-3xl">{timerDisplayString}</Text>}
           </CountdownCircleTimer>
           <Button
             variant={isConfirmingEndActivity ? 'default' : 'outline'}
