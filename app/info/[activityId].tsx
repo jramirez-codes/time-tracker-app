@@ -30,7 +30,7 @@ export default function Page() {
 
   React.useEffect(() => {
     const setUp = async () => {
-      const events = await db.getAllAsync<Event>(`SELECT * FROM events WHERE activityId = '${activityId}';`)
+      const events = await db.getAllAsync<Event>(`SELECT * FROM events WHERE activityId = '${activityId}' order by startTime desc;`)
       setCurrentEvents(events.map(e => {
         const newDate = new Date(e.startTime)
         return { ...e, startDateString: `${newDate.toLocaleDateString()} - ${newDate.toLocaleTimeString()}` }
@@ -114,9 +114,8 @@ export default function Page() {
             </TableRow>
           </TableHeader>
           <View style={{ maxHeight: tableBodyHeight}} ref={tableBodyRef}
-            onLayout={(e) => {
+            onLayout={(_) => {
               tableBodyRef.current?.measureInWindow((_: any, y: any, __: any, ___: any) => {
-                console.log(windowHeight - y)
                 setTableBodyHeight(windowHeight - y)
               })
             }}
