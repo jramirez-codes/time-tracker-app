@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Dimensions, ScrollView, Vibration, Animated } from 'react-native';
+import { View, Dimensions, ScrollView, Vibration } from 'react-native';
 import { Text } from '~/components/ui/text';
 import { useGlobalDataContext } from '~/components/ui-blocks/layout/data-wrapper';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
