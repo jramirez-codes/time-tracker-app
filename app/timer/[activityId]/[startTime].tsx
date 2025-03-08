@@ -13,6 +13,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useGetTime } from '~/components/ui-blocks/timer/hooks/use-get-time';
 import { createEventRecord } from '~/util/db/events/create-event-record';
 import { updateActivityRecord } from '~/util/db/activities/update-activity-record';
+import { accentColor } from '~/assets/static-states/accent-color';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -63,15 +64,16 @@ export default function Page() {
       {/* Main View */}
       <View className='bg-background'>
         <View className="items-center">
-          <Text className="text-[24px] mb-10 mt-10 font-bold">{selectedActivity?.title}</Text>
+          <Text className="text-[24px] mb-10 mt-10 font-bold text-center">{selectedActivity?.title}</Text>
           <CountdownCircleTimer
             isPlaying={true}
             duration={5}
-            colors={['#f20089', '#e500a4', '#db00b6', '#d100d1', '#db00b6', '#e500a4']}
+            // @ts-ignore
+            colors={[accentColor]}
             onComplete={() => {
               return { shouldRepeat: true, delay: 0 } // repeat animation in 1.5 seconds
             }}
-            colorsTime={[5, 4, 3, 2, 1, 0]}
+            // colorsTime={[5, 4, 3, 2, 1, 0]}
           >
             {({ }) => <Text className="font-bold text-3xl">{timerDisplayString}</Text>}
           </CountdownCircleTimer>

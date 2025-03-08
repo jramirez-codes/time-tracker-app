@@ -1,1 +1,1 @@
-export const accentColor = "#ADEBB3"
+export const accentColor:string = "#ADEBB3"
