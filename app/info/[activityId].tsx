@@ -13,6 +13,7 @@ import { Button } from '~/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
 import { cn } from '~/lib/utils';
 import { Card } from '~/components/ui/card';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -23,10 +24,11 @@ export default function Page() {
   const { activityId } = useLocalSearchParams();
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  const [selectedEvent, setSelectedEvent] = React.useState<GraphPoint | null>(null)
+  const [selectedEvent, setSelectedEvent] = React.useState<(GraphPoint & { id?: string }) | null>(null)
   const [hasZeroEvents, setHasZeroEvents] = React.useState(false)
   const tableBodyRef = React.useRef<View | null>(null)
   const [tableBodyHeight, setTableBodyHeight] = React.useState(0)
+  const [isDeletingEvent, setIsDeletingEvent] = React.useState(false)
 
   React.useEffect(() => {
     const setUp = async () => {
@@ -62,6 +64,10 @@ export default function Page() {
       }
     }).reverse()
   }, [currentEvents])
+
+  function handleDeleteEvent() {
+    throw new Error('Function not implemented.');
+  }
 
   return (
     <React.Fragment>
@@ -134,8 +140,12 @@ export default function Page() {
                       className={cn('active:bg-secondary', index % 2 && 'bg-muted/40 ')}
                       onLongPress={() => {
                         Vibration.vibrate(50);
-                        // globalDataContext.setSelectedActivity(obj)
-                        // setIsDeletingActivity(true);
+                        setSelectedEvent({
+                          date: new Date(obj.startTime),
+                          value: obj.duration,
+                          id: obj.id
+                        })
+                        setIsDeletingEvent(true);
                       }}
                       delayLongPress={1000}
                       key={obj.id}
@@ -171,6 +181,26 @@ export default function Page() {
           </Button>
         </View>
       )}
+      <Dialog open={isDeletingEvent} onOpenChange={e => setIsDeletingEvent(e)}>
+        <DialogContent className='w-[75vw]'>
+          <DialogHeader>
+            <DialogTitle>Delete Event</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this event at {selectedEvent?.date.toLocaleDateString()} - {selectedEvent?.date.toLocaleTimeString()}?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button
+                onPressIn={() => { handleDeleteEvent() }}
+                variant={"destructive"}
+              >
+                <Text>Delete</Text>
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </React.Fragment >
   );
 }
