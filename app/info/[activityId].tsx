@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Dimensions, ScrollView, Vibration } from 'react-native';
+import { View, Dimensions, ScrollView, Vibration, Animated } from 'react-native';
 import { Text } from '~/components/ui/text';
 import { useGlobalDataContext } from '~/components/ui-blocks/layout/data-wrapper';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
@@ -22,8 +22,11 @@ export default function Page() {
   const db = useSQLiteContext()
   const { activityId } = useLocalSearchParams();
   const windowWidth = Dimensions.get('window').width;
+  const windowHeight = Dimensions.get('window').height;
   const [selectedEvent, setSelectedEvent] = React.useState<GraphPoint | null>(null)
   const [hasZeroEvents, setHasZeroEvents] = React.useState(false)
+  const tableBodyRef = React.useRef<View | null>(null)
+  const [tableBodyHeight, setTableBodyHeight] = React.useState(0)
 
   React.useEffect(() => {
     const setUp = async () => {
@@ -110,52 +113,64 @@ export default function Page() {
               </TableHead>
             </TableRow>
           </TableHeader>
-          <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
-            <TableBody>
-              {currentEvents.map((obj, index) => {
-                return (
-                  <TableRow
-                    // onPress={() => { handleDoubleAndSinglePress(obj) }}
-                    className={cn('active:bg-secondary', index % 2 && 'bg-muted/40 ')}
-                    onLongPress={() => {
-                      Vibration.vibrate(50);
-                      // globalDataContext.setSelectedActivity(obj)
-                      // setIsDeletingActivity(true);
-                    }}
-                    delayLongPress={1000}
-                    key={obj.id}
-                  >
-                    <TableCell className="w-[50vw]">
-                      <Text>{obj.startDateString}</Text>
-                    </TableCell>
-                    <TableCell className="w-[50vw] relative">
-                      <Card className="absolute top-1/2 right-2 p-2 -translate-y-1">
-                        <Text style={{ color: accentColor }}>
-                          {formatMs(obj.duration)}
-                        </Text>
-                      </Card>
-                    </TableCell>
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </ScrollView>
+          <View style={{ maxHeight: tableBodyHeight}} ref={tableBodyRef}
+            onLayout={(e) => {
+              tableBodyRef.current?.measureInWindow((_: any, y: any, __: any, ___: any) => {
+                console.log(windowHeight - y)
+                setTableBodyHeight(windowHeight - y)
+              })
+            }}
+          >
+            <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+              <TableBody>
+                {currentEvents.map((obj, index) => {
+                  return (
+                    <TableRow
+                      // onPress={() => { handleDoubleAndSinglePress(obj) }}
+                      className={cn('active:bg-secondary', index % 2 && 'bg-muted/40 ')}
+                      onLongPress={() => {
+                        Vibration.vibrate(50);
+                        // globalDataContext.setSelectedActivity(obj)
+                        // setIsDeletingActivity(true);
+                      }}
+                      delayLongPress={1000}
+                      key={obj.id}
+                    >
+                      <TableCell className="w-[50vw]">
+                        <Text>{obj.startDateString}</Text>
+                      </TableCell>
+                      <TableCell className="w-[50vw] relative">
+                        <Card className="absolute top-1/2 right-2 p-2 -translate-y-1">
+                          <Text style={{ color: accentColor }}>
+                            {formatMs(obj.duration)}
+                          </Text>
+                        </Card>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </ScrollView>
+          </View>
         </Table>
 
-      )}
-      {hasZeroEvents && (
-        <View className="p-10">
-          <Text className="font-bold text-4xl text-center mb-2">
-            No Events for "{selectedActivity?.title}"
-          </Text>
-          <Text style={{ color: accentColor }} className="text-xl text-center mb-2">
-            Start adding new events
-          </Text>
-          <Button>
-            <Text>Create New Event</Text>
-          </Button>
-        </View>
-      )}
-    </React.Fragment>
+      )
+      }
+      {
+        hasZeroEvents && (
+          <View className="p-10">
+            <Text className="font-bold text-4xl text-center mb-2">
+              No Events for "{selectedActivity?.title}"
+            </Text>
+            <Text style={{ color: accentColor }} className="text-xl text-center mb-2">
+              Start adding new events
+            </Text>
+            <Button>
+              <Text>Create New Event</Text>
+            </Button>
+          </View>
+        )
+      }
+    </React.Fragment >
   );
 }

@@ -114,7 +114,7 @@ export default function Page() {
                   </TableCell>
                   <TableCell className="w-[50vw] relative">
                     <Card className="absolute top-1/2 right-2 p-2 -translate-y-1">
-                      <Text style={{color: accentColor}}>
+                      <Text style={{ color: accentColor }}>
                         {formatMs(obj.averageTimeMS)}
                       </Text>
                     </Card>
