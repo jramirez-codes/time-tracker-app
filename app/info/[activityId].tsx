@@ -132,7 +132,7 @@ export default function Page() {
           <TableHeader>
             <TableRow>
               <TableHead className='w-[50vw]' >
-                <Text className="text-left pl-1">Date</Text>
+                <Text className="text-left pl-1">Start Time</Text>
               </TableHead>
               <TableHead className='w-[50vw]' >
                 <Text className="text-right pr-1">Event Duration</Text>
