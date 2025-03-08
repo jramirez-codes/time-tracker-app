@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { GraphPoint, LineGraph } from 'react-native-graph';
 import { formatMs } from '~/util/format-ms';
 import { accentColor } from '~/assets/static-states/accent-color';
+import { Button } from '~/components/ui/button';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -19,6 +20,8 @@ export default function Page() {
   const { activityId } = useLocalSearchParams();
   const windowWidth = Dimensions.get('window').width;
   const [selectedEvent, setSelectedEvent] = React.useState<GraphPoint | null>(null)
+  const [hasZeroEvents, setHasZeroEvents] = React.useState(false)
+
   React.useEffect(() => {
     const setUp = async () => {
       const events = await db.getAllAsync<Event>(`SELECT * FROM events WHERE activityId = '${activityId}';`)
@@ -28,6 +31,9 @@ export default function Page() {
           date: new Date(events[0].startTime),
           value: events[0].duration
         })
+      }
+      else {
+        setHasZeroEvents(true)
       }
     }
     setUp()
@@ -61,13 +67,13 @@ export default function Page() {
         </View>
       )}
       <View className="relative h-[200px]">
-        <GestureHandlerRootView style={{flex:1}} >
+        <GestureHandlerRootView style={{ flex: 1 }} >
           <LineGraph
             style={{ width: windowWidth, height: 100 }}
             points={lineGraphData}
             animated={true}
             color={accentColor}
-            onPointSelected={(e)=>{setSelectedEvent(e)}}
+            onPointSelected={(e) => { setSelectedEvent(e) }}
             enablePanGesture={true}
           />
         </GestureHandlerRootView>
@@ -84,8 +90,20 @@ export default function Page() {
             </Text>
           </View>
         )}
-
       </View>
+      {hasZeroEvents && (
+        <View className="p-10">
+          <Text className="font-bold text-4xl text-center mb-2">
+            No Events for "{selectedActivity?.title}"
+          </Text>
+          <Text style={{ color: accentColor }} className="text-xl text-center mb-2">
+            Start adding new events
+          </Text>
+          <Button>
+            <Text>Create New Event</Text>
+          </Button>
+        </View>
+      )}
     </React.Fragment>
   );
 }
