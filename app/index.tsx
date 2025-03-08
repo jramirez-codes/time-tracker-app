@@ -27,6 +27,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Button } from '~/components/ui/button';
 import { deleteActivityRecord } from '~/util/db/delete-activity-record';
 import { handleDoubleTapEvent, useDoubleTapRef } from '~/util/double-tap-event';
+import { accentColor } from '~/assets/static-states/accent-color';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -113,7 +114,7 @@ export default function Page() {
                   </TableCell>
                   <TableCell className="w-[50vw] relative">
                     <Card className="absolute top-1/2 right-2 p-2 -translate-y-1">
-                      <Text>
+                      <Text style={{color: accentColor}}>
                         {formatMs(obj.averageTimeMS)}
                       </Text>
                     </Card>

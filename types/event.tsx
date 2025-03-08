@@ -1,4 +1,4 @@
-export interface Events {
+export interface Event {
   id: string;
   activityId: string;
   startTime: number;
