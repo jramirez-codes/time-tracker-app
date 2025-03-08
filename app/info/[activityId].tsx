@@ -113,7 +113,7 @@ export default function Page() {
               </TableHead>
             </TableRow>
           </TableHeader>
-          <View style={{ maxHeight: tableBodyHeight}} ref={tableBodyRef}
+          <View style={{ maxHeight: tableBodyHeight }} ref={tableBodyRef}
             onLayout={(_) => {
               tableBodyRef.current?.measureInWindow((_: any, y: any, __: any, ___: any) => {
                 setTableBodyHeight(windowHeight - y)
@@ -152,9 +152,7 @@ export default function Page() {
             </ScrollView>
           </View>
         </Table>
-
-      )
-      }
+      )}
       {
         hasZeroEvents && (
           <View className="p-10">
