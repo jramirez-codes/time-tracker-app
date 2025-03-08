@@ -89,7 +89,7 @@ export default function Page() {
       {selectedEvent && (
         <View className="pl-5 mt-3">
           <Text className="font-bold text-lg">
-            Event Duration (HH:MM:SS)
+            Event Duration
           </Text>
           <Text style={{ color: accentColor }} className="text-3xl">
             {formatMs(selectedEvent.value)}
