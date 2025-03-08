@@ -158,21 +158,19 @@ export default function Page() {
           </View>
         </Table>
       )}
-      {
-        hasZeroEvents && (
-          <View className="p-10">
-            <Text className="font-bold text-4xl text-center mb-2">
-              No Events for "{selectedActivity?.title}"
-            </Text>
-            <Text style={{ color: accentColor }} className="text-xl text-center mb-2">
-              Start adding new events
-            </Text>
-            <Button>
-              <Text>Create New Event</Text>
-            </Button>
-          </View>
-        )
-      }
+      {hasZeroEvents && (
+        <View className="p-10">
+          <Text className="font-bold text-4xl text-center mb-2">
+            No Events for "{selectedActivity?.title}"
+          </Text>
+          <Text style={{ color: accentColor }} className="text-xl text-center mb-2">
+            Start adding new events
+          </Text>
+          <Button>
+            <Text>Create New Event</Text>
+          </Button>
+        </View>
+      )}
     </React.Fragment >
   );
 }
