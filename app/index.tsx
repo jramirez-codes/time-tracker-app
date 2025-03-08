@@ -28,6 +28,7 @@ import { Button } from '~/components/ui/button';
 import { deleteActivityRecord } from '~/util/db/activities/delete-activity-record';
 import { handleDoubleTapEvent, useDoubleTapRef } from '~/util/double-tap-event';
 import { accentColor } from '~/assets/static-states/accent-color';
+import { deleteEventsByActivity } from '~/util/db/events/delete-events-by-activity';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -59,6 +60,7 @@ export default function Page() {
       globalDataContext.setActivities(e => e.filter(s => s.id !== idToDelete))
       globalDataContext.setSelectedActivity(null)
       deleteActivityRecord(idToDelete, db)
+      deleteEventsByActivity(idToDelete, db)
     }
   }
 
