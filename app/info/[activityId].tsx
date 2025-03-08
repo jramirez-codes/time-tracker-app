@@ -60,7 +60,7 @@ export default function Page() {
         date: new Date(e.startTime),
         value: e.duration
       }
-    })
+    }).reverse()
   }, [currentEvents])
 
   return (
@@ -83,7 +83,12 @@ export default function Page() {
             animated={true}
             color={accentColor}
             onPointSelected={(e) => { setSelectedEvent(e) }}
-            // onGestureStart={() => { Vibration.vibrate(50); }}
+            onGestureEnd={() => {
+              if (currentEvents.length > 0) setSelectedEvent({
+                date: new Date(currentEvents[0].startTime),
+                value: currentEvents[0].duration
+              });
+            }}
             enablePanGesture={true}
           />
         </GestureHandlerRootView>
