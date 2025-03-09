@@ -28,6 +28,7 @@ export default function Page() {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: "Running Activity...",
+      headerBackVisible: false,
       headerRight: () => {
         return (
           <Button

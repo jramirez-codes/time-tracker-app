@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import {
   Card,
 } from '~/components/ui/card';
@@ -85,7 +85,11 @@ export default function Page() {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'Astronos',
+      title: '',
+      // headerShown: false,
+      headerLeft: () => <Pressable onPressIn={() => { router.navigate("/settings") }}>
+        <Text className="text-2xl font-bold">Astronos</Text>
+      </Pressable>,
       headerRight: () => <CreateActivityButton open={isCreatingNewActivity} setOpen={setIsisCreatingNewActivity} handleCreateActivity={handleCreateActivity} />,
     })
   }, [navigator, isCreatingNewActivity])
@@ -124,7 +128,7 @@ export default function Page() {
                   </TableCell>
                   <TableCell className="w-[50vw] relative">
                     <Card className="absolute top-1/2 right-2 p-2 -translate-y-1">
-                      <Text style={{color: accentColor(isDarkColorScheme)}}>
+                      <Text style={{ color: accentColor(isDarkColorScheme) }}>
                         {formatMs(obj.averageTimeMS)}
                       </Text>
                     </Card>

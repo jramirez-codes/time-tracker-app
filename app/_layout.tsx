@@ -12,7 +12,9 @@ import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
 import { DataWrapper } from '~/components/ui-blocks/layout/data-wrapper';
 import { SQLiteProvider } from 'expo-sqlite';
 import { initalizeDatabase } from '~/util/db/initalize-database';
-
+import * as FileSystem from 'expo-file-system';
+import { Button } from '~/components/ui/button';
+import { Text } from '~/components/ui/text';
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
   colors: NAV_THEME.light,
@@ -31,7 +33,7 @@ export default function RootLayout() {
   const hasMounted = React.useRef(false);
   const { colorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
-
+  const sqlLitePath = String(FileSystem.documentDirectory).slice(7) + 'SQLite'
   useIsomorphicLayoutEffect(() => {
     if (hasMounted.current) {
       return;
@@ -52,10 +54,10 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <SQLiteProvider databaseName='main.db' onInit={initalizeDatabase}>
+      <SQLiteProvider databaseName='main.db' onInit={initalizeDatabase} directory={sqlLitePath}>
         <DataWrapper>
           <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-          <Stack/>
+          <Stack />
           <PortalHost />
         </DataWrapper>
       </SQLiteProvider>
