@@ -36,6 +36,7 @@ export default function Page() {
   const router = useRouter()
   const { isDarkColorScheme } = useColorScheme();
   const mainAccentColor = accentColor(isDarkColorScheme)
+  const [isStartingActivity, setIsStartingActivity] = React.useState(false)
 
   React.useEffect(() => {
     const setUp = async () => {
@@ -60,7 +61,9 @@ export default function Page() {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: selectedActivity?.title,
-      headerRight: ()=><Button variant={"ghost"}><CirclePlay className='text-foreground'/></Button>
+      headerRight: () => <Button variant={"ghost"} onPressIn={() => {
+        setIsStartingActivity(true)
+      }}><CirclePlay className='text-foreground' /></Button>
     })
   }, [navigator])
 
@@ -221,6 +224,26 @@ export default function Page() {
                 variant={"destructive"}
               >
                 <Text>Delete</Text>
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* Start Activity */}
+      <Dialog open={isStartingActivity} onOpenChange={e => setIsStartingActivity(e)}>
+        <DialogContent className='w-[75vw]'>
+          <DialogHeader>
+            <DialogTitle>Start Activity</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to start {selectedActivity?.title}?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button
+                onPressIn={() => { router.replace(`/timer/${selectedActivity?.id}/${(new Date).getTime()}`) }}
+              >
+                <Text>Start</Text>
               </Button>
             </DialogClose>
           </DialogFooter>
