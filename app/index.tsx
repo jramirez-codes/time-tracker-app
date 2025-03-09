@@ -45,11 +45,10 @@ export default function Page() {
 
   const { isDarkColorScheme, setColorScheme } = useColorScheme();
 
-  function toggleColorScheme() {
-    const newTheme = isDarkColorScheme ? 'light' : 'dark';
-    setColorScheme(newTheme);
-  }
-
+  // function toggleColorScheme() {
+  //   const newTheme = isDarkColorScheme ? 'light' : 'dark';
+  //   setColorScheme(newTheme);
+  // }
 
   function handleCreateActivity(title: string, description: string) {
     const newActivity = {
@@ -177,9 +176,6 @@ export default function Page() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <Button onPress={()=>{toggleColorScheme()}}>
-        <Text>TOOGLE TEXT</Text>
-      </Button>
     </View>
   );
 }
