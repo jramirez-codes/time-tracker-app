@@ -24,7 +24,6 @@ export default function Page() {
   const { activityId, startTime } = useLocalSearchParams();
   const timerDisplayString = useGetTime(Number(startTime))
   const windowWidth = Dimensions.get('window').width;
-  const windowHeight = Dimensions.get('window').height;
 
   React.useLayoutEffect(() => {
     navigation.setOptions({

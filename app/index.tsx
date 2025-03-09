@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 import {
   Card,
 } from '~/components/ui/card';
@@ -29,6 +29,7 @@ import { deleteActivityRecord } from '~/util/db/activities/delete-activity-recor
 import { handleDoubleTapEvent, useDoubleTapRef } from '~/util/double-tap-event';
 import { accentColor } from '~/assets/static-states/accent-color';
 import { deleteEventsByActivity } from '~/util/db/events/delete-events-by-activity';
+import { useColorScheme } from '~/lib/useColorScheme';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -41,6 +42,14 @@ export default function Page() {
   const navigation = useNavigation()
   const router = useRouter()
   const db = useSQLiteContext()
+
+  const { isDarkColorScheme, setColorScheme } = useColorScheme();
+
+  function toggleColorScheme() {
+    const newTheme = isDarkColorScheme ? 'light' : 'dark';
+    setColorScheme(newTheme);
+  }
+
 
   function handleCreateActivity(title: string, description: string) {
     const newActivity = {
@@ -116,7 +125,7 @@ export default function Page() {
                   </TableCell>
                   <TableCell className="w-[50vw] relative">
                     <Card className="absolute top-1/2 right-2 p-2 -translate-y-1">
-                      <Text style={{ color: accentColor }}>
+                      <Text style={{color: accentColor(isDarkColorScheme)}}>
                         {formatMs(obj.averageTimeMS)}
                       </Text>
                     </Card>
@@ -168,6 +177,9 @@ export default function Page() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <Button onPress={()=>{toggleColorScheme()}}>
+        <Text>TOOGLE TEXT</Text>
+      </Button>
     </View>
   );
 }

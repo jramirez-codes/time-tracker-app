@@ -16,6 +16,8 @@ import { Card } from '~/components/ui/card';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { deleteEventRecord } from '~/util/db/events/delete-event-record';
 import { updateActivityRecord } from '~/util/db/activities/update-activity-record';
+import { CirclePlay } from '~/lib/icons/CirclePlay';
+import { useColorScheme } from '~/lib/useColorScheme';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -32,6 +34,8 @@ export default function Page() {
   const [tableBodyHeight, setTableBodyHeight] = React.useState(0)
   const [eventToDelete, setEventToDelete] = React.useState<Event | null>(null)
   const router = useRouter()
+  const { isDarkColorScheme } = useColorScheme();
+  const mainAccentColor = accentColor(isDarkColorScheme)
 
   React.useEffect(() => {
     const setUp = async () => {
@@ -56,6 +60,7 @@ export default function Page() {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: selectedActivity?.title,
+      headerRight: ()=><Button variant={"ghost"}><CirclePlay className='text-foreground'/></Button>
     })
   }, [navigator])
 
@@ -91,7 +96,7 @@ export default function Page() {
           <Text className="font-bold text-lg">
             Event Duration
           </Text>
-          <Text style={{ color: accentColor }} className="text-3xl">
+          <Text style={{ color: mainAccentColor }} className="text-3xl">
             {formatMs(selectedEvent.value)}
           </Text>
         </View>
@@ -102,7 +107,7 @@ export default function Page() {
             style={{ width: windowWidth, height: 100 }}
             points={lineGraphData}
             animated={true}
-            color={accentColor}
+            color={accentColor(true)}
             onPointSelected={(e) => { setSelectedEvent(e) }}
             onGestureEnd={() => {
               if (currentEvents.length > 0) setSelectedEvent({
@@ -118,10 +123,10 @@ export default function Page() {
             <Text className="font-bold text-lg text-right">
               Date
             </Text>
-            <Text style={{ color: accentColor }} className="text-xl text-right">
+            <Text style={{ color: mainAccentColor }} className="text-xl text-right">
               {selectedEvent.date.toLocaleDateString()}
             </Text>
-            <Text style={{ color: accentColor }} className="text-xl text-right">
+            <Text style={{ color: mainAccentColor }} className="text-xl text-right">
               {selectedEvent.date.toLocaleTimeString()}
             </Text>
           </View>
@@ -169,7 +174,7 @@ export default function Page() {
                       </TableCell>
                       <TableCell className="w-[50vw] relative">
                         <Card className="absolute top-1/2 right-2 p-2 -translate-y-1">
-                          <Text style={{ color: accentColor }}>
+                          <Text style={{ color: mainAccentColor }}>
                             {formatMs(obj.duration)}
                           </Text>
                         </Card>
@@ -188,7 +193,7 @@ export default function Page() {
           <Text className="font-bold text-4xl text-center mb-2">
             No Events for "{selectedActivity?.title}"
           </Text>
-          <Text style={{ color: accentColor }} className="text-xl text-center mb-2">
+          <Text style={{ color: mainAccentColor }} className="text-xl text-center mb-2">
             Start adding new events
           </Text>
           <Button onPressIn={() => {

@@ -23,10 +23,9 @@ import Animated, {
 import { accentColor } from '~/assets/static-states/accent-color';
 
 export const ActivityIndicator = ({ width, height }: { width: number, height: number }) => {
-  const size = width/2;
+  const size = width / 2;
   const strokeWidth = 15;
   const radius = (size - strokeWidth) / 2;
-
   const circle = useMemo(() => {
     const skPath = Skia.Path.Make();
     skPath.addCircle(width / 2, height / 2, radius);
@@ -52,9 +51,9 @@ export const ActivityIndicator = ({ width, height }: { width: number, height: nu
     interpolate(progress.value, [0, 0.5, 1], [0.6, 0.3, 0.6])
   );
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     play()
-  },[])
+  }, [])
 
   return (
     <Animated.View
@@ -73,7 +72,7 @@ export const ActivityIndicator = ({ width, height }: { width: number, height: nu
         >
           <SweepGradient
             c={vec(width / 2, height / 2)}
-            colors={['cyan', accentColor , 'cyan']}
+            colors={['cyan', accentColor(true), 'cyan']}
           />
           <BlurMask blur={5} style="solid" />
         </Path>
