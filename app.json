@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "time-tracker",
+    "name": "astronos",
     "slug": "time-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.jordanramirez.timetracker"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +37,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "cd866887-2abf-4b8a-94b2-25a34ba467a0"
+      }
     }
   }
 }
