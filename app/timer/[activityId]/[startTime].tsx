@@ -1,19 +1,17 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { Text } from '~/components/ui/text';
 import { useGlobalDataContext } from '~/components/ui-blocks/layout/data-wrapper';
 import { useNavigation, useRouter } from 'expo-router';
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Button } from '~/components/ui/button';
 import { CircleX } from '~/lib/icons/CircleX';
-import { CircleStop } from '~/lib/icons/CircleStop';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useLocalSearchParams } from 'expo-router';
 import { useGetTime } from '~/components/ui-blocks/timer/hooks/use-get-time';
 import { createEventRecord } from '~/util/db/events/create-event-record';
 import { updateActivityRecord } from '~/util/db/activities/update-activity-record';
-import { accentColor } from '~/assets/static-states/accent-color';
+import { ActivityIndicator } from '~/components/ui-blocks/timer/activity-indicator';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -25,6 +23,8 @@ export default function Page() {
   const db = useSQLiteContext()
   const { activityId, startTime } = useLocalSearchParams();
   const timerDisplayString = useGetTime(Number(startTime))
+  const windowWidth = Dimensions.get('window').width;
+  const windowHeight = Dimensions.get('window').height;
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -65,30 +65,18 @@ export default function Page() {
       <View className='bg-background'>
         <View className="items-center">
           <Text className="text-[24px] mb-10 mt-10 font-bold text-center">{selectedActivity?.title}</Text>
-          <CountdownCircleTimer
-            isPlaying={true}
-            duration={5}
-            // @ts-ignore
-            colors={[accentColor]}
-            onComplete={() => {
-              return { shouldRepeat: true, delay: 0 } // repeat animation in 1.5 seconds
-            }}
-            // colorsTime={[5, 4, 3, 2, 1, 0]}
-          >
-            {({ }) => <Text className="font-bold text-3xl">{timerDisplayString}</Text>}
-          </CountdownCircleTimer>
+          <View className="relative">
+          <ActivityIndicator height={300} width={windowWidth}/>
+          <View className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <Text className="font-bold text-3xl">{timerDisplayString}</Text>
+          </View>
+          </View>
           <Button
             variant={isConfirmingEndActivity ? 'default' : 'outline'}
             className='mt-10 flex-row'
             onPressIn={() => { handleEndActivity() }}
           >
-            {isConfirmingEndActivity ? (
-              <CircleStop className="text-background mr-3" />
-            ) : (
-
-              <CircleStop className="text-foreground mr-3" />
-            )}
-            <Text style={{ marginTop: -2 }} className="font-bold">End Activity</Text>
+            <Text style={{ marginTop: -2 }} className="font-bold">{!isConfirmingEndActivity?"Stop" :"Confirm End"} Activity</Text>
           </Button>
         </View>
       </View>
