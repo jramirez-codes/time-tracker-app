@@ -56,7 +56,7 @@ export function CreateActivityButton(props: {
             className="mb-2"
           />
           <Textarea
-            placeholder={`Description about ${title}...`}
+            placeholder={`Description about ${title !== ""? "activity": title}...`}
             value={description}
             onChangeText={(e) => setDescription(e)}
             aria-labelledby='textareaLabel'
