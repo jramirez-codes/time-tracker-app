@@ -1,6 +1,6 @@
 import { useNavigation } from "expo-router"
 import React from "react"
-import { View } from "react-native"
+import { Alert, View } from "react-native"
 import { Button } from "~/components/ui/button"
 import { Text } from "~/components/ui/text"
 import { useColorScheme } from "~/lib/useColorScheme"
@@ -49,7 +49,7 @@ export default function Page() {
       }
     }
     catch (e) {
-      console.log(e)
+      Alert.alert(String(e))
     }
   }
 
