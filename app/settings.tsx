@@ -40,11 +40,11 @@ export default function Page() {
       if (result.assets) {
         const fileUri = result.assets[0].uri;
         const cachedDBPath = sqlLitePath
-        await FileSystem.deleteAsync(cachedDBPath, { idempotent: true })
         await FileSystem.copyAsync({
           from: fileUri,
           to: cachedDBPath
         })
+        console.log("IMPORTED!")
         await Updates.reloadAsync();
       }
     }
