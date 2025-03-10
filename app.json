@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.jordanramirez.timetracker"
+      "package": "com.astronos.astronos"
     },
     "web": {
       "bundler": "metro",
