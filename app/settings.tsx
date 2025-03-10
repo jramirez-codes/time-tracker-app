@@ -34,7 +34,7 @@ export default function Page() {
   async function handleImportDatabase() {
     try {
       let result: DocumentPicker.DocumentPickerResult = await DocumentPicker.getDocumentAsync({
-        type: "*/*",
+        type: "application/octet-stream",
         copyToCacheDirectory: false
       });
       if (result.assets) {
