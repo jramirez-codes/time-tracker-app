@@ -83,11 +83,20 @@ export default function Page() {
   async function handleDeleteEvent(event: Event | null) {
     if (selectedActivity && event) {
       await deleteEventRecord(event.id, db)
-      await updateActivityRecord({
-        ...selectedActivity,
-        averageTimeMS: Math.ceil(((selectedActivity.averageTimeMS * selectedActivity.totalEvents) + event.duration) / (selectedActivity.totalEvents + 1)),
-        totalEvents: selectedActivity.totalEvents + 1
-      }, db)
+      if (selectedActivity.totalEvents === 1) {
+        await updateActivityRecord({
+          ...selectedActivity,
+          averageTimeMS: 0,
+          totalEvents: 0
+        }, db)
+      }
+      else {
+        await updateActivityRecord({
+          ...selectedActivity,
+          averageTimeMS: Math.ceil(((selectedActivity.averageTimeMS * selectedActivity.totalEvents) - event.duration) / (selectedActivity.totalEvents + 1)),
+          totalEvents: selectedActivity.totalEvents - 1
+        }, db)
+      }
       setCurrentEvents(e => e.filter(s => s.id !== event.id))
     }
   }
