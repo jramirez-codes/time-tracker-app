@@ -59,7 +59,6 @@ export default function Page() {
           from: fileUri,
           to: cachedDBPath
         })
-        console.log("IMPORTED!")
         await Updates.reloadAsync();
       }
     }
