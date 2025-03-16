@@ -51,7 +51,7 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <SQLiteProvider databaseName='main.db' onInit={initalizeDatabase}>
+      <SQLiteProvider databaseName='astronos.db' onInit={initalizeDatabase}>
         <DataWrapper>
           <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
           <Stack />

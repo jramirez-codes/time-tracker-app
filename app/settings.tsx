@@ -13,7 +13,7 @@ import { defaultDatabaseDirectory } from 'expo-sqlite';
 export default function Page() {
   const navigation = useNavigation()
   const { isDarkColorScheme, setColorScheme } = useColorScheme();
-  const sqlLitePath = 'file://' + defaultDatabaseDirectory + '/main.db'
+  const sqlLitePath = 'file://' + defaultDatabaseDirectory + '/astronos.db'
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
