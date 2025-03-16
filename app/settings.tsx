@@ -1,4 +1,4 @@
-import { useNavigation } from "expo-router"
+import { useNavigation, useRouter } from "expo-router"
 import React from "react"
 import { Alert, View } from "react-native"
 import { Button } from "~/components/ui/button"
@@ -20,7 +20,8 @@ export default function Page() {
   const [isResettingData, setIsResettingData] = React.useState(false)
   const globalDataContext = useGlobalDataContext()
   const db = useSQLiteContext()
-  
+  const router = useRouter()
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Settings',
@@ -42,6 +43,7 @@ export default function Page() {
     await resetDatabase(db)
     globalDataContext.setActivities([])
     globalDataContext.setSelectedActivity(null)
+    router.replace('/')
   }
 
   async function handleImportDatabase() {
