@@ -48,7 +48,7 @@ export default function Page() {
     if (isConfirmingEndActivity) {
       const eventDuration = (new Date).getTime() - Number(startTime)
       await createEventRecord(`${activityId}`, Number(startTime), eventDuration, db)
-      if (selectedActivity?.averageTimeMS) {
+      if (selectedActivity?.hasOwnProperty("averageTimeMS")) {
         const averageTimeMS = Math.ceil(((selectedActivity.averageTimeMS * selectedActivity.totalEvents) + eventDuration) / (selectedActivity.totalEvents + 1))
         const totalEvents = selectedActivity.totalEvents + 1
         // Update SQLite Database

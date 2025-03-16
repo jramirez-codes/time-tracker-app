@@ -93,8 +93,8 @@ export default function Page() {
         globalDataContext.setActivities(e=>updateActivities(e, selectedActivity.id, 0, 0))
       }
       else {
-        const averageTimeMS = Math.ceil(((selectedActivity.averageTimeMS * selectedActivity.totalEvents) - event.duration) / (selectedActivity.totalEvents + 1))
         const totalEvents = selectedActivity.totalEvents - 1
+        const averageTimeMS = Math.ceil(((selectedActivity.averageTimeMS * selectedActivity.totalEvents) - event.duration) / totalEvents)
         await updateActivityRecord({
           ...selectedActivity,
           averageTimeMS: averageTimeMS,

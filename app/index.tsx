@@ -115,7 +115,7 @@ export default function Page() {
                     setIsDeletingActivity(true);
                   }}
                   delayLongPress={1000}
-                  key={obj.id}
+                  key={obj.id+obj.averageTimeMS}
                 >
                   <TableCell className="w-[50vw]">
                     <Text>{obj.title}</Text>
