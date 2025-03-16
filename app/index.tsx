@@ -42,13 +42,7 @@ export default function Page() {
   const navigation = useNavigation()
   const router = useRouter()
   const db = useSQLiteContext()
-
-  const { isDarkColorScheme, setColorScheme } = useColorScheme();
-
-  // function toggleColorScheme() {
-  //   const newTheme = isDarkColorScheme ? 'light' : 'dark';
-  //   setColorScheme(newTheme);
-  // }
+  const { isDarkColorScheme } = useColorScheme();
 
   function handleCreateActivity(title: string, description: string) {
     const newActivity = {

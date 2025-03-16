@@ -8,11 +8,12 @@ import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
 import * as Updates from 'expo-updates';
+import { defaultDatabaseDirectory } from 'expo-sqlite';
 
 export default function Page() {
   const navigation = useNavigation()
   const { isDarkColorScheme, setColorScheme } = useColorScheme();
-  const sqlLitePath = FileSystem.documentDirectory + 'SQLite/main.db'
+  const sqlLitePath = 'file://' + defaultDatabaseDirectory + '/main.db'
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
