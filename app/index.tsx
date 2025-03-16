@@ -107,11 +107,11 @@ export default function Page() {
             {activities.map((obj, index) => {
               return (
                 <TableRow
-                  onPress={() => { handleDoubleAndSinglePress(obj) }}
+                  onPress={() => { handleDoubleAndSinglePress({...obj, idx: index}) }}
                   className={cn('active:bg-secondary', index % 2 && 'bg-muted/40 ')}
                   onLongPress={() => {
                     Vibration.vibrate(50);
-                    globalDataContext.setSelectedActivity(obj)
+                    globalDataContext.setSelectedActivity({...obj, idx: index})
                     setIsDeletingActivity(true);
                   }}
                   delayLongPress={1000}

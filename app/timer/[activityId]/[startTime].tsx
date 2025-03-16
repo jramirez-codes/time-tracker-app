@@ -47,12 +47,23 @@ export default function Page() {
     if (isConfirmingEndActivity) {
       const eventDuration = (new Date).getTime() - Number(startTime)
       await createEventRecord(`${activityId}`, Number(startTime), eventDuration, db)
-      if (selectedActivity?.hasOwnProperty('averageTimeMS')) {
+      if (selectedActivity?.averageTimeMS) {
+        const averageTimeMS = Math.ceil(((selectedActivity.averageTimeMS * selectedActivity.totalEvents) + eventDuration) / (selectedActivity.totalEvents + 1))
+        const totalEvents = selectedActivity.totalEvents + 1
+        // Update SQLite Database
         await updateActivityRecord({
           ...selectedActivity,
-          averageTimeMS: Math.ceil(((selectedActivity.averageTimeMS * selectedActivity.totalEvents) + eventDuration) / (selectedActivity.totalEvents + 1)),
-          totalEvents: selectedActivity.totalEvents + 1
+          averageTimeMS: averageTimeMS,
+          totalEvents: totalEvents
         }, db)
+        // Update Frontend State
+        if(selectedActivity?.idx) {
+          globalDataContext.setActivities(e=>{
+            e[Number(selectedActivity.idx)].averageTimeMS = averageTimeMS
+            e[Number(selectedActivity.idx)].totalEvents = totalEvents
+            return e
+          })
+        }
       }
       router.replace(`/`)
     }

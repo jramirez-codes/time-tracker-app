@@ -4,4 +4,5 @@ export interface Activity {
   averageTimeMS: number,
   totalEvents: number,
   id: string,
+  idx?: number,
 }
