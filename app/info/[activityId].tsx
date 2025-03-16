@@ -18,6 +18,7 @@ import { deleteEventRecord } from '~/util/db/events/delete-event-record';
 import { updateActivityRecord } from '~/util/db/activities/update-activity-record';
 import { CirclePlay } from '~/lib/icons/CirclePlay';
 import { useColorScheme } from '~/lib/useColorScheme';
+import { updateActivities } from '~/util/update-activities';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -89,13 +90,17 @@ export default function Page() {
           averageTimeMS: 0,
           totalEvents: 0
         }, db)
+        globalDataContext.setActivities(updateActivities(globalDataContext.activities, selectedActivity.id, 0, 0))
       }
       else {
+        const averageTimeMS = Math.ceil(((selectedActivity.averageTimeMS * selectedActivity.totalEvents) - event.duration) / (selectedActivity.totalEvents + 1))
+        const totalEvents = selectedActivity.totalEvents - 1
         await updateActivityRecord({
           ...selectedActivity,
-          averageTimeMS: Math.ceil(((selectedActivity.averageTimeMS * selectedActivity.totalEvents) - event.duration) / (selectedActivity.totalEvents + 1)),
-          totalEvents: selectedActivity.totalEvents - 1
+          averageTimeMS: averageTimeMS,
+          totalEvents: totalEvents
         }, db)
+        globalDataContext.setActivities(updateActivities(globalDataContext.activities, selectedActivity.id, averageTimeMS, totalEvents))
       }
       setCurrentEvents(e => e.filter(s => s.id !== event.id))
     }

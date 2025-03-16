@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dimensions, View } from 'react-native';
+import { Alert, Dimensions, View } from 'react-native';
 import { Text } from '~/components/ui/text';
 import { useGlobalDataContext } from '~/components/ui-blocks/layout/data-wrapper';
 import { useNavigation, useRouter } from 'expo-router';
@@ -12,6 +12,7 @@ import { useGetTime } from '~/components/ui-blocks/timer/hooks/use-get-time';
 import { createEventRecord } from '~/util/db/events/create-event-record';
 import { updateActivityRecord } from '~/util/db/activities/update-activity-record';
 import { ActivityIndicator } from '~/components/ui-blocks/timer/activity-indicator';
+import { updateActivities } from '~/util/update-activities';
 
 export default function Page() {
   const globalDataContext = useGlobalDataContext()
@@ -57,13 +58,7 @@ export default function Page() {
           totalEvents: totalEvents
         }, db)
         // Update Frontend State
-        if(selectedActivity?.idx) {
-          globalDataContext.setActivities(e=>{
-            e[Number(selectedActivity.idx)].averageTimeMS = averageTimeMS
-            e[Number(selectedActivity.idx)].totalEvents = totalEvents
-            return e
-          })
-        }
+        globalDataContext.setActivities(updateActivities(globalDataContext.activities, selectedActivity.id, averageTimeMS, totalEvents))
       }
       router.replace(`/`)
     }
