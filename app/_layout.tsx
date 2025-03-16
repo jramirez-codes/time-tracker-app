@@ -12,7 +12,7 @@ import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
 import { DataWrapper } from '~/components/ui-blocks/layout/data-wrapper';
 import { SQLiteProvider } from 'expo-sqlite';
 import { initalizeDatabase } from '~/util/db/initalize-database';
-import * as FileSystem from 'expo-file-system';
+
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
   colors: NAV_THEME.light,
