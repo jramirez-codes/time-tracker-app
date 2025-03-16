@@ -6,17 +6,12 @@ export async function initalizeDatabase(db: SQLiteDatabase) {
 
   // Database is the Already on the most up to date version
   if (dbRes.hasOwnProperty('user_version') && dbRes?.user_version >= DATABASE_VERSION) {
-    // // Clean Run
-    // await db.execAsync(`
-    //   DELETE FROM activities WHERE id like '%';
-    //   DELETE FROM events WHERE id like '%';
-    // `);
-    
     // // Clean Start
     // await db.execAsync(`
-    //   PRAGMA journal_mode = 'wal';
     //   DROP TABLE activities;
     //   DROP TABLE events;
+    //   PRAGMA journal_mode = 'wal';
+    //   PRAGMA encoding = 'UTF-8';
     //   CREATE TABLE activities (
     //     id TEXT PRIMARY KEY,
     //     title TEXT NOT NULL,

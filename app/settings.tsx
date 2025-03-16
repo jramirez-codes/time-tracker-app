@@ -9,11 +9,13 @@ import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
 import * as Updates from 'expo-updates';
 import { defaultDatabaseDirectory } from 'expo-sqlite';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/dialog"
 
 export default function Page() {
   const navigation = useNavigation()
   const { isDarkColorScheme, setColorScheme } = useColorScheme();
   const sqlLitePath = 'file://' + defaultDatabaseDirectory + '/astronos.db'
+  const [isResettingData, setIsResettingData] = React.useState(false)
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -30,6 +32,10 @@ export default function Page() {
     await Sharing.shareAsync(sqlLitePath, { dialogTitle: 'share or copy your DB via' }).catch(error => {
       console.log(error);
     })
+  }
+
+  async function handleResetData() {
+
   }
 
   async function handleImportDatabase() {
@@ -84,6 +90,35 @@ export default function Page() {
           </Text>
         </Button>
       </>
+      <>
+        <Button onPressIn={() => {
+          handleImportDatabase()
+        }} variant="destructive" className="mb-10 mt-1">
+          <Text>
+            Reset Data
+          </Text>
+        </Button>
+      </>
+      <Dialog open={isResettingData} onOpenChange={e => setIsResettingData(e)}>
+        <DialogContent className='w-[75vw]'>
+          <DialogHeader>
+            <DialogTitle>Reset Data</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to reset your data?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button
+                onPressIn={() => { handleResetData() }}
+                variant={"destructive"}
+              >
+                <Text>Reset!</Text>
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </View>
   )
 }
