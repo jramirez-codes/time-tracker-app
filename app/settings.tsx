@@ -8,15 +8,19 @@ import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
 import * as Updates from 'expo-updates';
-import { defaultDatabaseDirectory } from 'expo-sqlite';
+import { defaultDatabaseDirectory, useSQLiteContext } from 'expo-sqlite';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/dialog"
+import { useGlobalDataContext } from "~/components/ui-blocks/layout/data-wrapper"
+import { resetDatabase } from "~/util/db/reset-database"
 
 export default function Page() {
   const navigation = useNavigation()
   const { isDarkColorScheme, setColorScheme } = useColorScheme();
   const sqlLitePath = 'file://' + defaultDatabaseDirectory + '/astronos.db'
   const [isResettingData, setIsResettingData] = React.useState(false)
-
+  const globalDataContext = useGlobalDataContext()
+  const db = useSQLiteContext()
+  
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Settings',
@@ -35,7 +39,9 @@ export default function Page() {
   }
 
   async function handleResetData() {
-
+    await resetDatabase(db)
+    globalDataContext.setActivities([])
+    globalDataContext.setSelectedActivity(null)
   }
 
   async function handleImportDatabase() {
@@ -79,9 +85,9 @@ export default function Page() {
             Export Now!
           </Text>
         </Button>
-        <Text className="text-lg">Import Database</Text>
       </>
       <>
+        <Text className="text-lg">Import Database</Text>
         <Button onPressIn={() => {
           handleImportDatabase()
         }} variant="outline" className="mb-10 mt-1">
@@ -91,11 +97,12 @@ export default function Page() {
         </Button>
       </>
       <>
+        <Text className="text-lg">Reset Database</Text>
         <Button onPressIn={() => {
-          handleImportDatabase()
+          setIsResettingData(true)
         }} variant="destructive" className="mb-10 mt-1">
           <Text>
-            Reset Data
+            Reset!
           </Text>
         </Button>
       </>
@@ -113,7 +120,7 @@ export default function Page() {
                 onPressIn={() => { handleResetData() }}
                 variant={"destructive"}
               >
-                <Text>Reset!</Text>
+                <Text>Yes!</Text>
               </Button>
             </DialogClose>
           </DialogFooter>
