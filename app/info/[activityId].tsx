@@ -90,7 +90,7 @@ export default function Page() {
           averageTimeMS: 0,
           totalEvents: 0
         }, db)
-        globalDataContext.setActivities(updateActivities(globalDataContext.activities, selectedActivity.id, 0, 0))
+        globalDataContext.setActivities(e=>updateActivities(e, selectedActivity.id, 0, 0))
       }
       else {
         const averageTimeMS = Math.ceil(((selectedActivity.averageTimeMS * selectedActivity.totalEvents) - event.duration) / (selectedActivity.totalEvents + 1))
@@ -100,7 +100,7 @@ export default function Page() {
           averageTimeMS: averageTimeMS,
           totalEvents: totalEvents
         }, db)
-        globalDataContext.setActivities(updateActivities(globalDataContext.activities, selectedActivity.id, averageTimeMS, totalEvents))
+        globalDataContext.setActivities(e=>updateActivities(e, selectedActivity.id, averageTimeMS, totalEvents))
       }
       setCurrentEvents(e => e.filter(s => s.id !== event.id))
     }

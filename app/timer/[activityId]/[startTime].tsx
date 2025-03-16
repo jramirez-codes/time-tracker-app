@@ -58,7 +58,7 @@ export default function Page() {
           totalEvents: totalEvents
         }, db)
         // Update Frontend State
-        globalDataContext.setActivities(updateActivities(globalDataContext.activities, selectedActivity.id, averageTimeMS, totalEvents))
+        globalDataContext.setActivities(e=>updateActivities(e, selectedActivity.id, averageTimeMS, totalEvents))
       }
       router.replace(`/`)
     }
